@@ -1,0 +1,125 @@
+domains:
+  quant:
+    label: "Quantitative Trading & Finance"
+    topics:
+      # Momentum & Trend
+      momentum_trend:
+        label: "Momentum & Trend (General)"
+      time_series_momentum:
+        label: "Time-Series Momentum"
+        parent: momentum_trend
+      cross_sectional_momentum:
+        label: "Cross-Sectional & Relative Momentum"
+        parent: momentum_trend
+      trend_following:
+        label: "Trend Following & CTA"
+        parent: momentum_trend
+
+      # Portfolio Construction
+      portfolio_construction:
+        label: "Portfolio Construction (General)"
+      mean_variance_optimization:
+        label: "Mean-Variance & Efficient Frontier"
+        parent: portfolio_construction
+      factor_models:
+        label: "Factor Models & Smart Beta"
+        parent: portfolio_construction
+      risk_parity:
+        label: "Risk Parity & Equal Risk Contribution"
+        parent: portfolio_construction
+
+      # Risk Management
+      risk_management:
+        label: "Risk Management (General)"
+      market_risk:
+        label: "VaR, CVaR & Market Risk"
+        parent: risk_management
+      drawdown_risk:
+        label: "Drawdown & Tail Risk"
+        parent: risk_management
+
+      # ML for Trading
+      ml_trading:
+        label: "ML for Trading (General)"
+      deep_learning_trading:
+        label: "Deep Learning & Neural Networks"
+        parent: ml_trading
+      classical_ml_trading:
+        label: "Classical ML (SVM, RF, Boosting)"
+        parent: ml_trading
+      feature_engineering_trading:
+        label: "Feature Engineering & Alpha Signals"
+        parent: ml_trading
+
+      # Market Microstructure
+      market_microstructure:
+        label: "Market Microstructure (General)"
+      order_book_dynamics:
+        label: "Order Book & LOB Dynamics"
+        parent: market_microstructure
+      market_impact:
+        label: "Market Impact & Price Impact"
+        parent: market_microstructure
+      liquidity_trading:
+        label: "Liquidity & Intraday Trading"
+        parent: market_microstructure
+
+      # Standalone topics
+      mean_reversion:
+        label: "Mean Reversion"
+      genetic_algo:
+        label: "Genetic Algorithms & Evolutionary Methods"
+      deep_rl_trading:
+        label: "Deep RL for Trading"
+      execution_optimal:
+        label: "Optimal Execution"
+      options_derivatives:
+        label: "Options & Derivatives Pricing"
+      crypto_strategies:
+        label: "Crypto & Digital Asset Strategies"
+      forex_strategies:
+        label: "FX & Currency Strategies"
+      carry_strategies:
+        label: "Carry Strategies"
+      nlp_trading:
+        label: "NLP & Alternative Text Data"
+      backtesting:
+        label: "Backtesting & Strategy Evaluation"
+      quant_finance:
+        label: "Quantitative Finance (General)"
+      metals_commodities:
+        label: "Metals & Commodities"
+      hmm_regime:
+        label: "HMM & Regime Detection"
+      statistical_arbitrage:
+        label: "Statistical Arbitrage"
+      pairs_trading:
+        label: "Pairs Trading & Cointegration"
+      kelly_criterion:
+        label: "Kelly Criterion & Bet Sizing"
+      monte_carlo:
+        label: "Monte Carlo & Stress Testing"
+      xauusd:
+        label: "Gold & XAUUSD"
+
+  biology:
+    label: "Biology & Bioinformatics"
+    topics: {}
+
+  code:
+    label: "Software Engineering & Code"
+    topics:
+      systems:
+        label: "Systems & Infrastructure"
+      ml_eng:
+        label: "ML Engineering"
+      web:
+        label: "Web & APIs"
+
+  web:
+    label: "Saved Web Pages & Articles"
+    topics: {}
+
+  notes:
+    label: "Personal Notes & Ideas"
+    topics: {}

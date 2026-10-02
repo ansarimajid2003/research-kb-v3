@@ -1,0 +1,103 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.13.6
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:6333:6333"
+      - "127.0.0.1:6334:6334"
+    volumes:
+      - /DATA/kb/qdrant:/qdrant/storage
+    environment:
+      QDRANT__STORAGE__ON_DISK_PAYLOAD: "true"
+    mem_limit: 1500m
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - /DATA/kb/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kb
+      POSTGRES_USER: kb
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    mem_limit: 400m
+    command: >
+      postgres
+        -c shared_buffers=128MB
+        -c work_mem=8MB
+        -c maintenance_work_mem=64MB
+        -c max_connections=20
+
+  kb-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: research-kb-v3:latest
+    restart: unless-stopped
+    ports:
+      - "8765:8765"
+    volumes:
+      - /DATA/kb/models:/kb/models
+      - /DATA:/data
+    env_file:
+      - .env
+    environment:
+      MODELS_DIR: /kb/models
+      ARXIV_DB: /data/arxiv_index.db
+      PAPERS_ROOT: /data/papers
+      FORCE_FP16: "true"
+    mem_limit: 2500m
+    depends_on:
+      - qdrant
+      - postgres
+    labels:
+      icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0iIzExMTgyNyIvPjxwYXRoIGQ9Ik0xOCAyMGgyOHYyNEgxOHoiIGZpbGw9IiMzOGJkZjgiLz48cGF0aCBkPSJNMjQgMjZoMTZNMjQgMzJoMTZNMjQgMzhoMTAiIHN0cm9rZT0iIzExMTgyNyIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="
+    x-casaos:
+      ports:
+        - container: "8765"
+          description:
+            en_us: MCP HTTP endpoint
+
+  kb-cleanup:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: research-kb-v3:latest
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MODELS_DIR: /kb/models
+      FORCE_FP16: "true"
+    command: >
+      sh -c "while true; do
+               python -m src.kb.cleanup --max-age-hours 24;
+               sleep 3600;
+             done"
+    mem_limit: 200m
+    depends_on:
+      - qdrant
+      - postgres
+
+x-casaos:
+  author: Custom
+  category: AI
+  description:
+    en_us: KB V3 MCP Server
+  hostname: ""
+  icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNCIgZmlsbD0iIzExMTgyNyIvPjxwYXRoIGQ9Ik0xOCAyMGgyOHYyNEgxOHoiIGZpbGw9IiMzOGJkZjgiLz48cGF0aCBkPSJNMjQgMjZoMTZNMjQgMzJoMTZNMjQgMzhoMTAiIHN0cm9rZT0iIzExMTgyNyIgc3Ryb2tlLXdpZHRoPSIzIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48L3N2Zz4="
+  index: /health
+  is_uncontrolled: false
+  main: kb-server
+  port_map: "8765"
+  scheme: http
+  store_app_id: research-kb-v3
+  title:
+    custom: ""
+    en_us: KB V3 MCP

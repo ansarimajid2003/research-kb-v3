@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+.venv/
+models/
+build/
+ingest/
+logs/
+data/
+__pycache__/
+*.py[cod]
+*.sqlite
+*.db
+*.pdf
